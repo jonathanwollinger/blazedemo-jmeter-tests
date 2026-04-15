@@ -1,0 +1,19 @@
+# JMeter
+*.jtl
+*.log
+reports/
+jmeter/results/
+
+# IntelliJ
+.idea/
+*.iml
+
+# OS
+.DS_Store
+
+# Temp files
+*.tmp
+*.bak
+
+# Logs
+logs/
