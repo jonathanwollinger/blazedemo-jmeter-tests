@@ -1,0 +1,100 @@
+name: Performance Test Pipeline
+
+on:
+  push:
+    branches: [ develop, main ]
+  pull_request:
+    branches: [ develop, main ]
+
+jobs:
+
+  test:
+    name: Run Performance Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Install JMeter
+        run: |
+          JMETER_VERSION=5.6.3
+          wget -q https://dlcdn.apache.org/jmeter/binaries/apache-jmeter-$JMETER_VERSION.tgz
+          tar -xzf apache-jmeter-$JMETER_VERSION.tgz
+          echo "$PWD/apache-jmeter-$JMETER_VERSION/bin" >> $GITHUB_PATH
+
+      - name: Prepare environment
+        run: |
+          mkdir -p reports results public
+          chmod +x scripts/*.sh
+
+      - name: Run Load Test
+        run: scripts/run-test.sh jmeter/test-plans/load-test.jmx load-test 60
+
+      - name: Run Spike Test
+        run: scripts/run-test.sh jmeter/test-plans/spike-test.jmx spike-test 60
+
+      - name: Generate Performance Summary
+        run: scripts/generate-summary.sh results/load-test.jtl
+        continue-on-error: true
+
+      - name: Upload Summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-summary
+          path: reports/summary.json
+
+      - name: Upload Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jmeter-results
+          path: results/
+
+      - name: Upload Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jmeter-reports
+          path: reports/
+
+
+  publish-report:
+    name: Publish Performance Report
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Prepare environment
+        run: |
+          mkdir -p public
+          chmod +x scripts/*.sh
+
+      - name: Download Reports
+        uses: actions/download-artifact@v4
+        with:
+          name: jmeter-reports
+          path: public
+
+      - name: Download Summary
+        uses: actions/download-artifact@v4
+        with:
+          name: performance-summary
+          path: public
+
+      - name: Generate Dashboard
+        run: scripts/generate-dashboard.sh public
+
+      - name: Generate Badge
+        run: scripts/generate-badge.sh public/summary.json public/badge.svg
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: public
+          force_orphan: true
