@@ -25,15 +25,37 @@ Simulando o cenário completo de compra de passagem aérea com sucesso (E2E).
 
 ### Resultado de Performance
 
-Ver dashboard atualizado:
+#### Load Test
 
-Load Test:
+Simula carga constante com controle de throughput utilizando PreciseThroughputTimer.
+
+Duração: 5 minutos
+
+Objetivo:
+- Validar SLA  
+- Medir estabilidade  
+- Obter métricas mais confiáveis (p90)
+
+Resultados: o sistema não atinge o throughput mínimo esperado de 250 requisições por segundo, mantendo aproximadamente 130 req/s. Apesar disso, os tempos de resposta se mantêm relativamente estáveis, porém acima do limite ideal em momentos de maior carga. O comportamento indica limitação de capacidade para sustentar a vazão exigida, mesmo em cenário de carga controlada.
+
 https://jonathanwollinger.github.io/blazedemo-jmeter-tests/load-test/
 
-Spike Test:
-https://jonathanwollinger.github.io/blazedemo-jmeter-tests/spike-test/
+---
 
-O sistema não atende ao critério mínimo de 250 req/s, apesar de manter o tempo de resposta dentro do limite.
+#### Spike Test
+
+Simula aumento abrupto de carga com alto número de usuários em curto período.
+
+Duração: 60 segundos
+
+Objetivo:
+- Avaliar comportamento do sistema sob pico repentino  
+- Identificar degradação de performance  
+- Observar estabilidade e experiência do usuário  
+
+Resultados: durante o teste de pico, o sistema apresentou degradação significativa de performance, com queda no throughput e aumento expressivo do tempo de resposta (p90 acima de 3 segundos). Apesar de não apresentar erros, o baixo índice de APDEX (~0.36) indica experiência insatisfatória para o usuário. O sistema demonstrou limitação na capacidade de absorver picos de carga, não atendendo aos critérios de SLA estabelecidos.
+
+https://jonathanwollinger.github.io/blazedemo-jmeter-tests/spike-test/
 
 ---
 

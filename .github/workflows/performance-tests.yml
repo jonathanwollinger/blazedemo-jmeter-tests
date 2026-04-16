@@ -29,7 +29,7 @@ jobs:
           chmod +x scripts/*.sh
 
       - name: Run Load Test
-        run: scripts/run-test.sh jmeter/test-plans/load-test.jmx load-test 60
+        run: scripts/run-test.sh jmeter/test-plans/load-test.jmx load-test 300
 
       - name: Run Spike Test
         run: scripts/run-test.sh jmeter/test-plans/spike-test.jmx spike-test 60
