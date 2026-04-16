@@ -25,15 +25,37 @@ Simulando o cenário completo de compra de passagem aérea com sucesso (E2E).
 
 ### Resultado de Performance
 
-Ver dashboard atualizado:
+#### Load Test
 
-Load Test:
+Simula carga constante com controle de throughput utilizando PreciseThroughputTimer.
+
+Duração: 5 minutos
+
+Objetivo:
+- Validar SLA  
+- Medir estabilidade  
+- Obter métricas mais confiáveis (p90)
+
+Resultados: o sistema não atinge o throughput mínimo esperado de 250 requisições por segundo, mantendo aproximadamente 130 req/s. Apesar disso, os tempos de resposta se mantêm relativamente estáveis, porém acima do limite ideal em momentos de maior carga. O comportamento indica limitação de capacidade para sustentar a vazão exigida, mesmo em cenário de carga controlada.
+
 https://jonathanwollinger.github.io/blazedemo-jmeter-tests/load-test/
 
-Spike Test:
-https://jonathanwollinger.github.io/blazedemo-jmeter-tests/spike-test/
+---
 
-O sistema não atende ao critério mínimo de 250 req/s, apesar de manter o tempo de resposta dentro do limite.
+#### Spike Test
+
+Simula aumento abrupto de carga com alto número de usuários em curto período.
+
+Duração: 60 segundos
+
+Objetivo:
+- Avaliar comportamento do sistema sob pico repentino  
+- Identificar degradação de performance  
+- Observar estabilidade e experiência do usuário  
+
+Resultados: durante o teste de pico, o sistema apresentou degradação significativa de performance, com queda no throughput e aumento expressivo do tempo de resposta (p90 acima de 3 segundos). Apesar de não apresentar erros, o baixo índice de APDEX (~0.36) indica experiência insatisfatória para o usuário. O sistema demonstrou limitação na capacidade de absorver picos de carga, não atendendo aos critérios de SLA estabelecidos.
+
+https://jonathanwollinger.github.io/blazedemo-jmeter-tests/spike-test/
 
 ---
 
@@ -90,7 +112,7 @@ Objetivo:
 ## Como executar localmente
 
 ```bash
-./scripts/run-test.sh jmeter/test-plans/load-test.jmx load-test 120
+./scripts/run-test.sh jmeter/test-plans/load-test.jmx load-test 300
 ./scripts/run-test.sh jmeter/test-plans/spike-test.jmx spike-test 60
 ```
 
@@ -103,9 +125,9 @@ https://jonathanwollinger.github.io/blazedemo-jmeter-tests/
 
 A pipeline executa com sucesso, porém o sistema não atende ao critério de performance definido.
 
-Análise: - O load test demonstra se o sistema suporta a vazão de 250
-req/s dentro do limite de p90 \< 2s\
-- O spike test evidencia degradação sob carga elevada
+O sistema apresenta boa latência (p90 dentro do limite), porém não possui capacidade suficiente para sustentar a vazão exigida de 250 req/s.
+
+O load test evidencia limitação de capacidade sob carga constante, enquanto o spike test demonstra degradação significativa sob picos de carga, indicando ausência de elasticidade ou mecanismos de escala.
 
 ## Considerações
 
@@ -113,6 +135,7 @@ req/s dentro do limite de p90 \< 2s\
 -   Validação funcional garante consistência\
 -   Pipeline automatiza execução, validação e publicação\
 -   Dashboard facilita análise
+-   Validação de SLA implementada diretamente nos testes via Duration Assertion (tempo de resposta <= 2s)
 
 ## CI/CD
 

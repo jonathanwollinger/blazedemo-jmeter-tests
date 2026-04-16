@@ -82,6 +82,9 @@
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
             <intProp name="Assertion.test_type">2</intProp>
           </ResponseAssertion>
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="SLA - Response Time max 2000ms" enabled="true">
+            <stringProp name="DurationAssertion.duration">2000</stringProp>
+          </DurationAssertion>
           <hashTree/>
         </hashTree>
 

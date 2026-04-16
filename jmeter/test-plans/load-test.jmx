@@ -9,19 +9,22 @@
       <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
     </TestPlan>
     <hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TG - Flight Purchase Scenario">
+        <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TG - Flight Purchase Scenario">
         <intProp name="ThreadGroup.num_threads">300</intProp>
         <intProp name="ThreadGroup.ramp_time">10</intProp>
-        <stringProp name="ThreadGroup.duration">${__P(duration,300)}</stringProp>
-        <longProp name="ThreadGroup.delay">0</longProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
-        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
-          <intProp name="LoopController.loops">-1</intProp>
-          <boolProp name="LoopController.continue_forever">false</boolProp>
+
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.duration">${__P(duration,300)}</stringProp>
+        <stringProp name="ThreadGroup.delay">0</stringProp>
+
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController"
+                    guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
+            <intProp name="LoopController.loops">-1</intProp>
+            <boolProp name="LoopController.continue_forever">false</boolProp>
         </elementProp>
-      </ThreadGroup>
+        </ThreadGroup>
       <hashTree>
         <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Think Time">
           <stringProp name="ConstantTimer.delay">1000</stringProp>
@@ -56,7 +59,7 @@
           <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
         </ConfigTestElement>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET - Homepage">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET - Homepage" enabled="true">
           <stringProp name="HTTPSampler.path">/</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -151,9 +154,12 @@
             <stringProp name="Assertion.custom_message"></stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
           </ResponseAssertion>
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="SLA - Response Time max 2000ms" enabled="true">
+            <stringProp name="DurationAssertion.duration">2000</stringProp>
+          </DurationAssertion>
           <hashTree/>
         </hashTree>
-        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
