@@ -112,7 +112,7 @@ Objetivo:
 ## Como executar localmente
 
 ```bash
-./scripts/run-test.sh jmeter/test-plans/load-test.jmx load-test 120
+./scripts/run-test.sh jmeter/test-plans/load-test.jmx load-test 300
 ./scripts/run-test.sh jmeter/test-plans/spike-test.jmx spike-test 60
 ```
 
@@ -125,9 +125,9 @@ https://jonathanwollinger.github.io/blazedemo-jmeter-tests/
 
 A pipeline executa com sucesso, porém o sistema não atende ao critério de performance definido.
 
-Análise: - O load test demonstra se o sistema suporta a vazão de 250
-req/s dentro do limite de p90 \< 2s\
-- O spike test evidencia degradação sob carga elevada
+O sistema apresenta boa latência (p90 dentro do limite), porém não possui capacidade suficiente para sustentar a vazão exigida de 250 req/s.
+
+O load test evidencia limitação de capacidade sob carga constante, enquanto o spike test demonstra degradação significativa sob picos de carga, indicando ausência de elasticidade ou mecanismos de escala.
 
 ## Considerações
 
@@ -135,6 +135,7 @@ req/s dentro do limite de p90 \< 2s\
 -   Validação funcional garante consistência\
 -   Pipeline automatiza execução, validação e publicação\
 -   Dashboard facilita análise
+-   Validação de SLA implementada diretamente nos testes via Duration Assertion (tempo de resposta <= 2s)
 
 ## CI/CD
 
