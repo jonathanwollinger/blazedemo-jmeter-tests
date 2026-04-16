@@ -31,6 +31,9 @@ jobs:
       - name: Run Load Test
         run: scripts/run-test.sh jmeter/test-plans/load-test.jmx load-test 60
 
+      - name: Run Spike Test
+        run: scripts/run-test.sh jmeter/test-plans/spike-test.jmx spike-test 60
+
       - name: Generate Performance Summary
         run: scripts/generate-summary.sh results/load-test.jtl
         continue-on-error: true
@@ -89,7 +92,7 @@ jobs:
       - name: Generate Badge
         run: scripts/generate-badge.sh public/summary.json public/badge.svg
 
-      - name: Deploy to GitHub Pages (clean)
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

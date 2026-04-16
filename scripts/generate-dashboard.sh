@@ -39,6 +39,7 @@ cat <<EOF > $OUTPUT_DIR/index.html
 <h2>📊 Reports</h2>
 <ul>
   <li><a href="load-test/index.html">Load Test</a></li>
+  <li><a href="spike-test/index.html">Spike Test</a></li>
 </ul>
 
 <script>
